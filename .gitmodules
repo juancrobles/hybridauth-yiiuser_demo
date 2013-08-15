@@ -1,3 +1,6 @@
 [submodule "www/protected/modules/user"]
 	path = www/protected/modules/user
 	url = git@github.com:juancrobles/yii-user.git
+[submodule "www/protected/modules/hybridauth"]
+	path = www/protected/modules/hybridauth
+	url = git@github.com:juancrobles/hybridauth.git

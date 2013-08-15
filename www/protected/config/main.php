@@ -8,7 +8,7 @@ date_default_timezone_set('America/Chicago');
 
 // This is the main Web application configuration. Any writable
 // CWebApplication properties can be configured here.
-return array(
+$config = array(
 	'basePath'=>dirname(__FILE__).DIRECTORY_SEPARATOR.'..',
 	'name'=>'My Web Application',
 
@@ -21,6 +21,9 @@ return array(
 		'application.components.*',
         'application.modules.user.models.*',
         'application.modules.user.components.*',
+        'application.modules.hybridauth.models.*',
+        'application.modules.hybridauth.components.*',
+        'application.modules.hybridauth.controllers.*',
 	),
 
 	'modules'=>array(
@@ -34,6 +37,9 @@ return array(
 		),
 		*/
 
+        /**
+         * yii-user config
+         */
         'user'=>array(
             # encrypting method (php hash function)
             'hash' => 'md5',
@@ -65,6 +71,46 @@ return array(
             # page after logout
             'returnLogoutUrl' => array('/user/login'),
         ),
+
+        /**
+         * hybridauth config
+         */
+        'hybridauth' => array(
+            'baseUrl' => 'http://'. $_SERVER['SERVER_NAME'] . '/hybridauth',
+            'withYiiUser' => true, // Set to true if using yii-user
+            "providers" => array (
+                "OpenID" => array (
+                    "enabled" => true
+                ),
+
+                "Yahoo" => array (
+                    "enabled" => true
+                ),
+
+                "Google" => array (
+                    "enabled" => true,
+                    "keys"    => array ( "id" => "", "secret" => "" ),
+                    "scope"   => "https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email" , // optional
+                ),
+
+                "Facebook" => array (
+                    "enabled" => true,
+                    "keys"    => array ( "id" => "", "secret" => "" ),
+                    "scope"   => "email,publish_stream",
+                    "display" => ""
+                ),
+
+                "Live" => array (
+                    "enabled" => true,
+                    "keys"    => array ( "id" => "", "secret" => "" ),
+                ),
+
+                "Twitter" => array (
+                    "enabled" => true,
+                    "keys"    => array ( "key" => "", "secret" => "" )
+                )
+            ),
+        ),
 	),
 
 	// application components
@@ -76,7 +122,7 @@ return array(
             'loginUrl' => array('/user/login'),
 		),
 		// uncomment the following to enable URLs in path-format
-		/*
+
 		'urlManager'=>array(
 			'urlFormat'=>'path',
 			'rules'=>array(
@@ -85,7 +131,7 @@ return array(
 				'<controller:\w+>/<action:\w+>'=>'<controller>/<action>',
 			),
 		),
-		*/
+
         /*
         'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
@@ -129,3 +175,13 @@ return array(
 		'adminEmail'=>'webmaster@example.com',
 	),
 );
+
+// include for hybrid providers
+// used to declare hybrid keys outside source control repository
+if(file_exists(dirname(__FILE__).'/hybrid_keys.php')) {
+    include_once('hybrid_keys.php');
+
+    $config['modules']['hybridauth']['providers'] = $providers;
+}
+
+return $config;

@@ -23,6 +23,25 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `ha_logins`
+--
+
+CREATE TABLE IF NOT EXISTS `ha_logins` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `userId` int(11) NOT NULL,
+  `loginProvider` varchar(50) NOT NULL,
+  `loginProviderIdentifier` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `loginProvider_2` (`loginProvider`,`loginProviderIdentifier`),
+  KEY `loginProvider` (`loginProvider`),
+  KEY `loginProviderIdentifier` (`loginProviderIdentifier`),
+  KEY `userId` (`userId`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `tbl_migration`
 --
 
